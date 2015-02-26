@@ -1,0 +1,52 @@
+<ion-view>
+  <ion-content scroll="false">
+    <div class="app-root add-child">
+      <form class="child-form" name="childForm" novalidate ng-submit="childForm.$valid && startLearning()">
+        <span class="form-field">
+          <span>Hi! My name is</span><input type="text" id="name" class="name" name="cName" ng-model="child.name" ng-keypress="catchGo($event,'age');" required="" alpha/>
+        </span>
+        <span class="form-field">
+          <span>I am</span><input type="tel" id="age" class="age" name="cAge" ng-model="child.age" ng-keypress="catchGo($event,'country');" required="" maxlength=2 numeric/><span>  years old</span>
+        </span>
+        <span class="form-field">
+          <span>I live in</span>
+            <select id="country" name="cCountry" ng-model="child.country" ng-options="c.value as c.label for c in countries" required>
+              <option value="">&nbsp;</option>
+            </select>
+        </span>
+        <span class="form-field">
+          <span>and I speak</span>
+            <select id="language" name="cLanguage" ng-model="child.language" ng-options="l.value as l.label for l in languages" required>
+              <option value="">&nbsp;</option>
+            </select>
+        </span>
+        <span id="actions" class="form-field">
+          <span ng-show="imgURI === undefined">
+            <span class="take-picture" ng-click="takePicture()"></span>
+            <span class="text">This is what I look like</span>
+          </span>
+          <span class="continue" ng-show="imgURI !== undefined">
+            <img class="circle" ng-src="{{imgURI}}"/>
+            <input type="submit" class="lets-go" value=""/>
+          </span>
+        </span>
+        <div class="form-errors">
+          <div ng-show="childForm.$submitted || childForm.cName.$touched" class="ng-hide">
+            <span ng-show="childForm.cName.$error.required">Name is required</span>
+            <span ng-show="childForm.cName.$error.alpha">Only letters please</span>
+          </div>
+          <div ng-show="childForm.$submitted || childForm.cAge.$touched" class="ng-hide">
+            <span ng-show="childForm.cAge.$error.required">Age is required</span>
+            <span ng-show="childForm.cAge.$error.numeric">Only digits please</span> 
+          </div>
+          <div ng-show="childForm.$submitted || childForm.cCountry.$touched" class="ng-hide">
+            <span ng-show="childForm.cCountry.$error.required">Country is required</span>
+          </div>
+          <div ng-show="childForm.$submitted || childForm.cLanguage.$touched" class="ng-hide">
+            <span ng-show="childForm.cLanguage.$error.required">Language is required</span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ion-content>
+</ion-view>

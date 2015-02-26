@@ -1,0 +1,22 @@
+<ion-view>
+  <ion-content scroll="false">
+  	<div class="app-root test">
+  		<div class="words">
+  			<div class="word-card" ng-repeat="word in words">
+  				<img class="word-bg" ng-src="{{word.bg}}"/>
+  				<img class="word" ng-src="{{word.icon}}"/>
+  			</div>
+  		</div>
+  		<div class="text">Let's see what you remember!</div>
+  		<div class="sub-text">connect the video and the drawing</div>
+  		<div class="videos">
+  			<div class="video-card" ng-repeat="video in videos">
+					<video id="video_4" height="200" width="200" ng-src="{{video.src}}" type="video/mp3" preload="auto" muted>
+						Your browser does not support the video tag.
+					</video>
+					<img class="play" src="img/play.png">
+				</div>
+  	</div>
+
+  </ion-content>
+</ion-view>

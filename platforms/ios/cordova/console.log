@@ -1,0 +1,18 @@
+2015-02-20 16:01:20.888 ananas[40239:16787596] DiskCookieStorage changing policy from 2 to 0, cookie file: file:///Users/yavgar/Library/Developer/CoreSimulator/Devices/7D044911-1EC1-4463-91A9-2A6E1143BD38/data/Containers/Data/Application/F11783CF-B5AD-4F70-BA72-558BDAE3CDC8/Library/Cookies/Cookies.binarycookies
+2015-02-20 16:01:21.059 ananas[40239:16787596] Apache Cordova native platform version 3.7.0 is starting.
+2015-02-20 16:01:21.060 ananas[40239:16787596] Multi-tasking -> Device: YES, App: YES
+2015-02-20 16:01:21.079 ananas[40239:16787596] Unlimited access to network resources
+2015-02-20 16:01:21.567 ananas[40239:16787596] [CDVTimer][keyboard] 0.066996ms
+2015-02-20 16:01:21.578 ananas[40239:16787596] [CDVTimer][file] 10.733008ms
+2015-02-20 16:01:21.578 ananas[40239:16787596] [CDVTimer][TotalPluginStartup] 11.189997ms
+2015-02-20 16:01:21.850 ananas[40239:16787596] Resetting plugins due to page load.
+2015-02-20 16:01:22.879 ananas[40239:16787596] Finished load of: http://192.168.1.3:8100/#/app/learning
+2015-02-22 22:37:26.606 ananas[46978:2746147] DiskCookieStorage changing policy from 2 to 0, cookie file: file:///Users/yavgar/Library/Developer/CoreSimulator/Devices/7D044911-1EC1-4463-91A9-2A6E1143BD38/data/Containers/Data/Application/14FE6527-9A9C-488E-AB43-5C619425252D/Library/Cookies/Cookies.binarycookies
+2015-02-22 22:37:26.719 ananas[46978:2746147] Apache Cordova native platform version 3.7.0 is starting.
+2015-02-22 22:37:26.720 ananas[46978:2746147] Multi-tasking -> Device: YES, App: YES
+2015-02-22 22:37:26.744 ananas[46978:2746147] Unlimited access to network resources
+2015-02-22 22:37:27.154 ananas[46978:2746147] [CDVTimer][keyboard] 0.072002ms
+2015-02-22 22:37:27.165 ananas[46978:2746147] [CDVTimer][file] 10.291994ms
+2015-02-22 22:37:27.165 ananas[46978:2746147] [CDVTimer][TotalPluginStartup] 11.134982ms
+2015-02-22 22:37:27.375 ananas[46978:2746147] Resetting plugins due to page load.
+2015-02-22 22:37:27.424 ananas[46978:2746147] Failed to load webpage with error: Could not connect to the server.
