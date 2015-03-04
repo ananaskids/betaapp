@@ -16,3 +16,30 @@
 2015-02-22 22:37:27.165 ananas[46978:2746147] [CDVTimer][TotalPluginStartup] 11.134982ms
 2015-02-22 22:37:27.375 ananas[46978:2746147] Resetting plugins due to page load.
 2015-02-22 22:37:27.424 ananas[46978:2746147] Failed to load webpage with error: Could not connect to the server.
+2015-02-26 13:27:03.329 ananas[38194:7813825] DiskCookieStorage changing policy from 2 to 0, cookie file: file:///Users/yavgar/Library/Developer/CoreSimulator/Devices/7D044911-1EC1-4463-91A9-2A6E1143BD38/data/Containers/Data/Application/C7C0F968-2C5D-4CD5-9844-61626B434FF2/Library/Cookies/Cookies.binarycookies
+2015-02-26 13:27:03.440 ananas[38194:7813825] Apache Cordova native platform version 3.7.0 is starting.
+2015-02-26 13:27:03.441 ananas[38194:7813825] Multi-tasking -> Device: YES, App: YES
+2015-02-26 13:27:03.456 ananas[38194:7813825] Unlimited access to network resources
+2015-02-26 13:27:03.860 ananas[38194:7813825] [CDVTimer][keyboard] 0.067949ms
+2015-02-26 13:27:03.871 ananas[38194:7813825] [CDVTimer][file] 10.446012ms
+2015-02-26 13:27:03.871 ananas[38194:7813825] [CDVTimer][TotalPluginStartup] 10.935962ms
+2015-02-26 13:27:04.074 ananas[38194:7813825] Resetting plugins due to page load.
+2015-02-26 13:27:04.120 ananas[38194:7813825] Failed to load webpage with error: Could not connect to the server.
+2015-02-28 23:59:34.608 ananas[83949:11321740] DiskCookieStorage changing policy from 2 to 0, cookie file: file:///Users/yavgar/Library/Developer/CoreSimulator/Devices/7D044911-1EC1-4463-91A9-2A6E1143BD38/data/Containers/Data/Application/1FFBCCA3-9E3C-4071-907C-26BB0CCF738C/Library/Cookies/Cookies.binarycookies
+2015-02-28 23:59:34.713 ananas[83949:11321740] Apache Cordova native platform version 3.7.0 is starting.
+2015-02-28 23:59:34.714 ananas[83949:11321740] Multi-tasking -> Device: YES, App: YES
+2015-02-28 23:59:34.730 ananas[83949:11321740] Unlimited access to network resources
+2015-02-28 23:59:35.120 ananas[83949:11321740] [CDVTimer][keyboard] 0.065982ms
+2015-02-28 23:59:35.130 ananas[83949:11321740] [CDVTimer][file] 9.688973ms
+2015-02-28 23:59:35.130 ananas[83949:11321740] [CDVTimer][TotalPluginStartup] 10.111988ms
+2015-02-28 23:59:35.384 ananas[83949:11321740] Resetting plugins due to page load.
+2015-02-28 23:59:36.517 ananas[83949:11321740] Finished load of: http://192.168.1.12:8100/
+2015-03-01 09:51:54.478 ananas[85816:11349966] DiskCookieStorage changing policy from 2 to 0, cookie file: file:///Users/yavgar/Library/Developer/CoreSimulator/Devices/7D044911-1EC1-4463-91A9-2A6E1143BD38/data/Containers/Data/Application/9C3161BE-3E58-4C36-B748-8A602B546CB8/Library/Cookies/Cookies.binarycookies
+2015-03-01 09:51:54.544 ananas[85816:11349966] Apache Cordova native platform version 3.7.0 is starting.
+2015-03-01 09:51:54.544 ananas[85816:11349966] Multi-tasking -> Device: YES, App: YES
+2015-03-01 09:51:54.566 ananas[85816:11349966] Unlimited access to network resources
+2015-03-01 09:51:54.715 ananas[85816:11349966] [CDVTimer][keyboard] 0.056982ms
+2015-03-01 09:51:54.718 ananas[85816:11349966] [CDVTimer][file] 2.546012ms
+2015-03-01 09:51:54.718 ananas[85816:11349966] [CDVTimer][TotalPluginStartup] 2.914011ms
+2015-03-01 09:51:54.845 ananas[85816:11349966] Resetting plugins due to page load.
+2015-03-01 09:51:55.131 ananas[85816:11349966] Finished load of: file:///Users/yavgar/Library/Developer/CoreSimulator/Devices/7D044911-1EC1-4463-91A9-2A6E1143BD38/data/Containers/Bundle/Application/3095D45E-9DF3-4D34-B752-6BB8CC21F956/ananas.app/www/index.html

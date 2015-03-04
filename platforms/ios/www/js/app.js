@@ -87,5 +87,5 @@ angular.module('ananas', ['ionic', 'ananas.controllers','ngCordova','ngCordovaOa
   });
 */
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/welcome');
+  $urlRouterProvider.otherwise('/app/test');
 });

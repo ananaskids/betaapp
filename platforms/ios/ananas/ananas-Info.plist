@@ -67,7 +67,7 @@
     <key>NSLocationWhenInUseUsageDescription</key>
     <string></string>
     <key>NSMainNibFile</key>
-    <string></string>
+    <string>MainViewController</string>
     <key>NSMainNibFile~ipad</key>
     <string></string>
     <key>UILaunchImages</key>

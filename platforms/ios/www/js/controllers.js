@@ -1,7 +1,7 @@
 var NUMERIC_REGEXP = /^\-?\d+$/;
 var ONLYALPHA_REGEXP = /^[A-Za-z ]+$/;
 
-angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'angular-carousel']) //, 'ngQueue'
+angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'angular-carousel'])
 
 .controller('MenuCtrl', function($scope, $localstorage, $userinfo, $state, $window) {
 
@@ -51,7 +51,6 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
   };
 
   $scope.childSelected = function(child){
-    console.log(child.name);
     if (child.name == 'Me Too!')
       $state.go('app.addChild');
     else {  
@@ -471,18 +470,16 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
     }
 
     $scope.modalAction = function(action){
-      
+      $scope.modal.hide();
       switch (action) {
         case 'globe':
-          $scope.modal.hide();
           $scope.status = 'loading';
           $scope.gotoGlobe();       
           break;
         case 'test':
-          //$scope.showModal();
+          $state.go('app.test');
           break;
         case 'play':
-          $scope.modal.hide();
           $scope.status = 'playing';
           $scope.startPlaying();
           break; 
@@ -495,9 +492,186 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
   });
 })
 
-.controller('TestCtrl', function($scope, $localstorage, $userinfo, $state, $timeout, $cordovaFile, $ionicModal, $window) {
-  $scope.words = [{icon: 'img/words/sun.png', bg: 'img/word_card_pink.png'}, {icon: 'img/words/heart.png', bg: 'img/word_card_green.png'}];
-  $scope.videos = [{src: 'vid/alma/alma_shemesh_ipod.m4v'}, {src:'vid/alma/alma_lev_ipod.m4v'}]
+.directive('onFinishRender', function ($timeout) {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attr) {
+      if (scope.$last === true) {
+        $timeout(function () { 
+          scope.$emit('ngRepeatFinished');
+        });
+      }
+    }
+  }
+})
+
+.directive('connectableElement', function(){
+  return {
+    restrict: 'A',
+    link: function ($scope, $element, $attrs) {
+      $attrs.$observe('connectableElement', function(value) {
+        $scope.connectableElements.push(
+        {vidId: $attrs.vidid, 
+          type: $attrs.type,
+          word: $attrs.word,
+          rect: 
+          {left: $element[0].getBoundingClientRect().left, 
+            right: $element[0].getBoundingClientRect().right,
+            top: $element[0].getBoundingClientRect().top,
+            bottom: $element[0].getBoundingClientRect().bottom
+          }
+        })
+      })
+    }
+  }
+})
+
+.directive('ananasDrawAndPlay', function() {
+
+  var connections = [];
+
+  var redrawStoredLines = function(ctx){
+    ctx.clearRect(0,0,1024,768);
+    if(connections.length==0){ return; }
+    for(var i=0;i<connections.length;i++){
+      var current_connection = connections[i].sections;
+      for(var j=0;j<current_connection.length;j++){
+        ctx.beginPath();
+        ctx.strokeStyle = "Green";
+        ctx.moveTo(current_connection[j].x1, current_connection[j].y1);
+        ctx.lineTo(current_connection[j].x2, current_connection[j].y2);
+        ctx.stroke();
+      }
+    } 
+  };
+
+  return {
+    restrict: 'A',
+    link: function($scope, $element) {
+      var ctx = $element[0].getContext('2d'),
+          drawing = false,
+          posX = 0,
+          posY = 0,
+          lastPosX = 0,
+          lastPosY = 0;
+          current_connection = {startType:"", sections:[]};          
+
+      ionic.onGesture('touch drag dragend tap',  function(e) {
+        e.gesture.srcEvent.preventDefault();
+        e.gesture.preventDefault();
+        switch (e.type) {
+          case 'touch':
+            lastPosX = e.gesture.center.pageX; 
+            lastPosY = e.gesture.center.pageY;
+            var startElem = $scope.onElement({x: lastPosX, y: lastPosY});
+            if (startElem !== null) {
+              current_connection.startType = startElem.type;
+              current_connection.startWord = startElem.word;
+              ctx.beginPath();  
+              drawing = true;
+            }
+            else {
+              // show message - start and end on words/videos
+              drawing = false;
+            }
+            break;
+          case 'drag':
+            if (drawing) {
+              posX = e.gesture.center.pageX; 
+              posY = e.gesture.center.pageY;           
+              ctx.moveTo(lastPosX,lastPosY);
+              ctx.lineTo(posX,posY); //to 
+              ctx.strokeStyle = "#fff";
+              ctx.lineWidth=16;
+              ctx.stroke();
+              current_connection.sections.push({x1: lastPosX, y1: lastPosY, x2: posX, y2: posY});
+              lastPosX = posX; // set current coordinates to last one
+              lastPosY = posY;
+            }
+            break;
+          case 'dragend':
+            lastPosX = e.gesture.center.pageX; 
+            lastPosY = e.gesture.center.pageY;
+            var endElem = $scope.onElement({x: lastPosX, y: lastPosY});
+            if (endElem === null) {
+              // show message - start and end on words/videos
+              //redrawStoredLines(ctx)
+
+            } else {
+              if (current_connection.startType !== endElem.type) {
+                if (current_connection.startWord === endElem.word) {
+                  connections.push(current_connection);
+                } else {
+                  // show message - no match
+                  //redrawStoredLines(ctx);
+                }
+
+              } else { 
+                // show message - connect video to word or vice-versa.
+                //redrawStoredLines(ctx);
+              } 
+            }
+            redrawStoredLines(ctx);
+            current_connection = {startType:"", sections:[]};
+            drawing = false;   
+            break;
+          case 'tap':
+            lastPosX = e.gesture.center.pageX; 
+            lastPosY = e.gesture.center.pageY;
+            var elem = $scope.onElement({x: lastPosX, y: lastPosY});
+            if (elem !== null && elem.type == 'video') {
+              $scope.playVideo(elem.vidId);
+            }
+            break;
+        }
+      }, $element[0]);
+    }
+  }
+})
+
+.controller('TestCtrl', function($scope, $localstorage, $userinfo, $state, $timeout, $cordovaFile, $ionicModal, $swipe, $window) {
+
+  $state.reload() 
+  $scope.shuffleArray = function(array) {
+    var m = array.length, t, i;
+    while (m) {     // While there remain elements to shuffle
+      i = Math.floor(Math.random() * m--); // Pick a remaining element…
+      t = array[m]; // And swap it with the current element.
+      array[m] = array[i];
+      array[i] = t;
+    }
+    return array;
+  }
+
+  $scope.words = [{word: 'sun', icon: 'img/words/sun.png', bg: 'img/word_card_pink.png'}, {word: 'heart', icon: 'img/words/heart.png', bg: 'img/word_card_green.png'}];
+  $scope.videos = [{id:"0", word: 'sun', src: 'vid/alma/alma_shemesh_ipod.m4v'}, {id: "1", word: 'heart', src:'vid/alma/alma_lev_ipod.m4v'}]
+  $scope.videos = $scope.shuffleArray ($scope.videos);
+  $scope.connectableElements = [];
+ 
+  $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+    $scope.videoPlayer0 = document.getElementById("video-0");
+    $scope.videoPlayer0.load();
+    $scope.videoPlayer1 = document.getElementById("video-1");
+    $scope.videoPlayer1.load();
+  });
+
+  $scope.onElement = function(coords) {
+    var inElement = null;
+    for (var i = $scope.connectableElements.length - 1; i >= 0; i--) {
+      var elementSpace = $scope.connectableElements[i].rect;
+      if (coords.x >= elementSpace.left && coords.x <= elementSpace.right && 
+          coords.y >= elementSpace.top && coords.y <= elementSpace.bottom) {
+        inElement = { vidId: $scope.connectableElements[i].vidId, word: $scope.connectableElements[i].word, type: $scope.connectableElements[i].type }
+        break;
+      }
+    };
+    return inElement;
+  }
+
+  $scope.playVideo = function(vidId) {
+    $scope.videoPlayer = document.getElementById("video-" +vidId);
+    $scope.videoPlayer.play();
+  }
 
 });
 

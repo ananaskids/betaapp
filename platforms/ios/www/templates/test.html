@@ -1,8 +1,9 @@
 <ion-view>
   <ion-content scroll="false">
-  	<div class="app-root test">
+  	<div class="app-root game">
+      <canvas id="canvas" width="1024px" height="768px" ananas-draw-and-play></canvas>
   		<div class="words">
-  			<div class="word-card" ng-repeat="word in words">
+  			<div id="word-card-{{$index}}" data-type="word" data-word="{{word.word}}" class="word-card" ng-repeat="word in words" connectable-element>
   				<img class="word-bg" ng-src="{{word.bg}}"/>
   				<img class="word" ng-src="{{word.icon}}"/>
   			</div>
@@ -10,13 +11,13 @@
   		<div class="text">Let's see what you remember!</div>
   		<div class="sub-text">connect the video and the drawing</div>
   		<div class="videos">
-  			<div class="video-card" ng-repeat="video in videos">
-					<video id="video_4" height="200" width="200" ng-src="{{video.src}}" type="video/mp3" preload="auto" muted>
+  			<div class="video-card" ng-repeat="video in videos" data-vidid="{{video.id}}" data-type="video" data-word="{{video.word}}" on-finish-render="ngRepeatFinished" connectable-element>
+					<video id="video-{{video.id}}" height="200" width="200" ng-src="{{video.src}}" type="video/mp3" preload="auto">
 						Your browser does not support the video tag.
 					</video>
-					<img class="play" src="img/play.png">
+          <img class="mask" src="img/video_mask.png"/>
 				</div>
+      </div>
   	</div>
-
   </ion-content>
 </ion-view>
