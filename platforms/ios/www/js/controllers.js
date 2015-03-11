@@ -3,52 +3,124 @@ var ONLYALPHA_REGEXP = /^[A-Za-z ]+$/;
 
 angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'angular-carousel'])
 
-.controller('MenuCtrl', function($scope, $localstorage, $userinfo, $state, $window) {
+.controller('MenuCtrl', function($scope, $localstorage, $userinfo, $state, $window,$firebase, $firebaseAuth, $timeout) {
 
-  $scope.menuData = {};
   $scope.goToLogin = function(){
     $state.go('app.login');
   }
-  $userinfo.set("null");
 
-  if ($userinfo.loggedIn()) {  
-    $scope.menuData.loginLabel = "Logout";
+  if ($scope.videoRecorder) {
+    //window.Plugin.backgroundvideo.clear(null, null);
   }
-  else {
-    $scope.menuData.loginLabel = "Login with Facebook";
+
+  $scope.firebaseUrl = 'ananaskids.firebaseio.com';
+  var ref = new Firebase($scope.firebaseUrl);
+
+  $scope.menuAction = function(action){
+    switch (action) {
+      case 'about':
+        alert('about')
+        break;
+      case 'privacy':
+        alert('privacy')
+        break;
+      case 'logout':
+        ref.unauth();
+        $state.go('app.welcome'); 
+        $timeout(function(){
+          $state.go('app.login');
+        }, 2500, true)
+        break;
+    }
   }
+
 })
 
-.controller('WelcomeCtrl', function($scope, $cordovaOauth, $localstorage, $state, $timeout) {
-
+.controller('WelcomeCtrl', function($scope, $localstorage, $state, $timeout) {
+ 
   document.addEventListener("deviceready", function () { 
-    $timeout($state.go('app.login'), 2500, true)
+    $timeout(function(){$state.go('app.login');}, 2500, true)
   });
 
+
 })
 
-.controller('LoginCtrl', function($scope, $cordovaOauth, $localstorage, $userinfo, $state, $timeout, $window, $firebase, $firebaseAuth, $ionicLoading, $rootScope) {
+.controller('LoginCtrl', function($scope, $localstorage, $userinfo, $state, $timeout, $window, $firebase, $firebaseAuth, $ionicLoading, $rootScope) {
 
-  // debug msg + settings
-  $userinfo.set({"access_token":"CAAV4S78GuJUBAOKbOqJcRyGVLDztX8xPBf5ZCcaU5ZC0zyMEyNVPLpBXUEqCzl1ZBXZColT3FOZAtmoQTFebHoME8iy2OcQKK9toy33azXBVuaP5k39f3TJdnEKCiY9Ybb4TvbGIRMI6LDJ4uJQX9M2rg8qaXFyOcR5nYuMYEdSy1lA7nuS3PZA6F99FkGurwZD","expires_in":"5171349"});
-  $scope.menuData.loginLabel = "Logout";
-  // ---- end debug
+  $scope.catchGo = function(event, focusOn){
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      if (focusOn.length > 0) {
+        document.getElementById(focusOn).focus();
+      } else {
+        cordova.plugins.Keyboard.close();
+      }
+    }
+  }
 
-  $scope.facebookLogin = function() {
-    if ($scope.menuData.loginLabel == "Login with Facebook") {    
-      $cordovaOauth.facebook ("1539641606322325", ['email','public_profile'])
-      .then(function(result) {
-        $userinfo.setObject(result); 
-        $scope.menuData.loginLabel = "Logout";
+  $scope.loadChildren = function(parentEmail) {
+
+    $scope.children = $firebase(ref.child('children')).$asArray();
+    $scope.children.$loaded().then(function(){
+      $scope.myChildren = [];
+      if ($scope.children.length == 0) {
         $scope.userStatus = 'user - no children';
-      }, function(err) {
-        console.log(err);
-      });
+      } else {
+        for (var i = $scope.children.length - 1; i >= 0; i--) {
+          if ($scope.children[i].parentEmail == parentEmail) {
+            $scope.myChildren.push($scope.children[i]);
+          } 
+        };
+        if ($scope.myChildren.length == 0) {
+          $scope.userStatus = 'user - no children';
+        } else {
+          $scope.myChildren.push({name:"Me Too!", photo:"img/circle_green.png", score:"new"})
+          $scope.userStatus = 'user with children';
+        }
+      }
+    });
+  }
+
+  $scope.authDataCallback = function(authData) {
+    if (authData) {
+      $localstorage.set("parentEmail", authData.password.email);
+      $scope.loadChildren(authData.password.email);
     } else {
-      $userinfo.set({});
-      $scope.menuData.loginLabel = "Login with Facebook";
-    }  
-  };
+      $scope.userStatus = 'no user';
+    }
+  }
+
+  $scope.signIn = function () { 
+    var parent = $scope.parent
+    if (parent && parent.email && parent.password) { 
+      
+      auth.$authWithPassword({ email: parent.email, password: parent.password })
+      .then(function (authData) {  
+        $localstorage.set("parentEmail", parent.email);
+        $scope.loadChildren(parent.email); 
+      })
+      .catch(function (error) { 
+        $scope.createParent(parent);
+      }); 
+    } else { 
+      alert("Please enter email and password both"); 
+    }
+  }
+
+  $scope.createParent = function (parent) {  
+    if (parent && parent.email && parent.password) { 
+      auth.$createUser({ email: parent.email, password: parent.password })
+      .then(function (userData) { 
+        ref.child("users").child(userData.uid).set({ email: parent.email, year: parent.year });
+        $localstorage.set("parentEmail", parent.email);
+        $scope.loadChildren(parent.email);
+      })
+      .catch(function (error) { 
+        alert("Error: " + error); 
+      }); 
+    } else 
+    alert("Please fill all details"); 
+  }
 
   $scope.childSelected = function(child){
     if (child.name == 'Me Too!')
@@ -59,71 +131,34 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
     }
   } 
 
+  $scope.parent = {}; 
+
   $scope.firebaseUrl = 'ananaskids.firebaseio.com';
-  var ref = new Firebase($scope.firebaseUrl); 
-  var auth = $firebaseAuth(ref);  
+  var ref = new Firebase($scope.firebaseUrl);
+  var auth = $firebaseAuth(ref); 
+  ref.onAuth($scope.authDataCallback); 
 
-  $scope.createUser = function (user) {  
-    if (user && user.email && user.password && user.displayname) { 
-      //$ionicLoading.show({ template: 'Signing Up...' }); 
-      auth.$createUser({ email: user.email, password: user.password })
-      .then(function (userData) { 
-        console.log("User created successfully!"); 
-        ref.child("users").child(userData.uid).set({ email: user.email, displayName: user.displayname }); 
-        //$scope.$apply(function () { 
-          $rootScope.displayName = user.displayname; 
-        //});         
-        //$ionicLoading.hide(); 
-        //$scope.modal.hide(); 
-      })
-      .catch(function (error) { 
-        alert("Error: " + error); 
-        //$ionicLoading.hide(); 
-      }); 
-    } else 
-    alert("Please fill all details"); 
-  }
+})
 
-  $scope.signIn = function (user) { 
-    if (user && user.email && user.pwdForLogin) { 
-      
-      auth.$authWithPassword({ email: user.email, password: user.pwdForLogin })
-      .then(function (authData) {  
-        ref.child("users").child(authData.uid).once('value', function (snapshot) { 
-          var val = snapshot.val(); // To Update AngularJS $scope either use $apply or $timeout 
-          $scope.$apply(function () { 
-            $rootScope.displayName = val; 
-          }); 
-        }); 
-        //$ionicLoading.hide(); 
-        //$state.go('app.addChild'); 
-      })
-      .catch(function (error) { 
-        console.log("Authentication failed:" + error.message); 
-        user['password'] = user.pwdForLogin;
-        $scope.createUser(user);
-        //$ionicLoading.hide(); 
-      }); 
-    } else { 
-      alert("Please enter email and password both"); 
+
+.directive('year', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      ctrl.$validators.year = function(modelValue, viewValue) {
+        if (ctrl.$isEmpty(modelValue) || !NUMERIC_REGEXP.test(viewValue)) {
+          // consider empty models to be valid
+          return true;
+        }
+        if (viewValue >= 1950 && viewValue <= 2015) {
+          // it is valid
+          return true;
+        }
+        // it is invalid
+        return false;
+      };
     }
-  }
-
-  var ref = new Firebase('ananaskids.firebaseio.com'); 
-  $scope.children = $firebase(ref.child('children')).$asArray();
-  $scope.children.$loaded().then(function(){
-
-    if ($scope.children.length == 0) {
-      $scope.userStatus = 'user - no children';
-      //$scope.gotoAddChild();
-    } else {
-      $scope.children.push({name:"Me Too!", photo:"img/circle_green.png", score:"new"})
-      $scope.userStatus = 'user with children';
-    }
-  });
-
-  var betaUser = {email:'beta@ananasapp.com', pwdForLogin:'beta123', displayname: 'Beta'}
-  $scope.signIn(betaUser)
+  };
 })
 
 
@@ -167,31 +202,31 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
   };
 })
 
-.controller('AddChildCtrl', function($scope, $cordovaOauth, $localstorage, $userinfo, $state, Children, $window, $cordovaCamera, $firebase, $timeout) {
+.controller('AddChildCtrl', function($scope, $localstorage, $userinfo, $state, Children, $window, $cordovaCamera, $firebase, $timeout) {
 
+  var parentEmail = $localstorage.get("parentEmail")
   childForm.$submitted = false;
-  //var ref = new Firebase('ananaskids.firebaseio.com'); 
-  //$scope.children = $firebase(ref.child('children')).$asArray();
-  //$scope.children.$loaded().then(function(){
 
-  $scope.child = {score: 10};
+  $scope.child = {score: 10, parentEmail: parentEmail};
 
   $scope.languages = [{label: 'English', value: '1'},
-                      {label: 'Spanish', value: '2'},
-                      {label: 'Hebrew', value: '3'}]
+                      {label: 'Chinese', value: '2'},
+                      {label: 'French', value: '3'},
+                      {label: 'German', value: '4'},
+                      {label: 'Hebrew', value: '5'},
+                      {label: 'Arabic', value: '6'},
+                      {label: 'Spanish', value: '7'}]
+
 
   $scope.countries = [{label: 'USA', value: 'USA'},
                       {label: 'Britain', value: 'Britain'},
-                      {label: 'Israel', value: 'Israel'}]
-
- $scope.catchGo = function(event, focusOn){
-    if (event.keyCode == 13) {
-      event.preventDefault();
-      if (focusOn.length > 0) {
-        document.getElementById(focusOn).focus();
-      }
-    }
-  }
+                      {label: 'China', value: 'China'},
+                      {label: 'France', value: 'France'},
+                      {label: 'Germany', value: 'Germany'},
+                      {label: 'Israel', value: 'Israel'},
+                      {label: 'Jordan', value: 'Jordan'},
+                      {label: 'Spain', value: 'Spain'}, 
+                      {label: 'Other', value: 'Other'}]
 
   $scope.startLearning = function(){
     $scope.child['photo'] = $scope.imgURI;
@@ -201,10 +236,9 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
   }
 
   document.addEventListener("deviceready", function () {  
-
-    // http://api.geonames.org/countryInfoJSON?username=demo      
                     
     $scope.takePicture = function() { 
+
       var CameraPopoverOptions = { x : 0,
         y :  32,
         width : 320,
@@ -237,7 +271,7 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
 
 .controller('LearningCtrl', function($scope, $localstorage, $userinfo, $state, $timeout, $cordovaFile, $ionicModal, $window) { 
 
-  $scope.languages = ['','English','Spanish','Hebrew']
+  $scope.languages = ['','English', 'Chinese', 'French', 'German', 'Hebrew', 'Arabic', 'Spanish'];
 
   document.addEventListener("deviceready", function () {
 
@@ -260,12 +294,45 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
 
     $scope.words = ['', 'sun', 'heart'];
     $scope.micOn = true;
+    $scope.showRepeatVideo = false;
+    $scope.countdownNumber = '';
+    $scope.menuIconClass = "black" 
+
+    $scope.onTakeSuccess= function(data) {
+      $scope.imgURI = "data:image/jpeg;base64," + imageData;
+      $userinfo.setMeImage("data:image/jpeg;base64," + imageData);
+    }    
+
+    $scope.initCamera = function(){
+
+      console.log("init camera")
+
+      canvasMain = document.getElementById("camera");
+      CanvasCamera.initialize(canvasMain);
+      // define options
+      var opt = {
+          quality: 95,
+          destinationType: CanvasCamera.DestinationType.DATA_URL,
+          encodingType: CanvasCamera.EncodingType.JPEG,
+          saveToPhotoAlbum:true,
+          correctOrientation:true,
+          width:100,
+          height:100, 
+          cameraDirection:1
+      };
+      CanvasCamera.start(opt);
+
+      // to take a pic -       CanvasCamera.takePicture(onTakeSuccess);
+
+    }
 
     $scope.promptRepeat = function(){
-      $scope.vidNumber = 0;
+      //$scope.vidNumber = 0;
+      var friendsScreen =  document.getElementById("my-screen");
+      Velocity(friendsScreen, { width:  "0px"}, { duration: 50 });
+      $scope.showRepeatVideo = true;
       $scope.repeatThat = true;
       $scope.micIcon = 'img/mic_touch.gif';
-      //$scope.showMic = true;
     }
 
     $scope.nextTurnOrEnd = function(){
@@ -285,7 +352,7 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
       $scope.teachingFeedback = true;
       $timeout(function(){
         $scope.nextTurnOrEnd();
-      }, 4000, true) /******************************************/        
+      }, 1500, true)      
     }
 
     $scope.videoPlayer1 = document.getElementById("video_1");
@@ -293,7 +360,7 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
     $scope.videoPlayer1.onended = function() {
       $timeout(function(){
         $scope.promptRepeat();
-      }, 200, true)    /******************************************/      
+      }, 200, true)         
     };
 
     // -------------
@@ -302,7 +369,7 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
     $scope.videoPlayer2.onended = function() {
       $timeout(function(){
         $scope.showTeachingFeedback()
-      }, 1000, true)    /******************************************/
+      }, 400, true)    
     };
     // -------------
     $scope.videoPlayer3 = document.getElementById("video_3");
@@ -318,7 +385,7 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
     $scope.videoPlayer4.onended = function() {
       $timeout(function(){
         $scope.showTeachingFeedback()
-      }, 1000, true)
+      }, 400, true)
     };
 
     $ionicModal.fromTemplateUrl('templates/playAgainModal.html', {
@@ -329,20 +396,22 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
     });
 
     $scope.showModal = function(){
-      $scope.videoRecorder.clear(null, null);
-      $scope.videoRecorder = null;
-      $scope.status = 'modal';
+      //window.Plugin.backgroundvideo.clear(null, null);
+      //$scope.videoRecorder = null;
+      $scope.status = 'match';
       $scope.modal.show();
     }                          
 
     $scope.playTeachPart1 = function (){
-      //turn init
+
       $timeout(function(){
         $scope.learningFeedback = false;
         $scope.turnStatus = $scope.turnStatuses['start'];
+        $scope.showRepeatVideo = false;
+        //$scope.friendsTurn = false;
+
         $scope.yourTurn = true;
         $scope.micIcon = 'img/mic_touch.gif';
-        //$scope.showMic = true;
       }, 1000, true)
     };
 
@@ -361,57 +430,49 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
             $scope.vidNumber = 4;
             $scope.videoPlayer4.play();
           }
-        }, 3000, true)
+        }, 1500, true)
       });
     };
 
     $scope.playLearnPart1 = function () {
-      //turn init
+      //turn init      
       $timeout(function(){
-        $scope.learningFeedback = false;
-        var dotPostion = (-47 * ($scope.turn['num'])).toString() + 'px';
-        $scope.dotsCount = {'background-position': '0px ' + dotPostion};
-        $scope.turnStatus = $scope.turnStatuses['start'];
-      }, 1000, true)  /******************************************/       
-      .then(function() {
-        // show word card
+        var friendsScreen =  document.getElementById("friends-screen");
+        Velocity(friendsScreen, { width:  "0px"}, { duration: 200 });
+        $scope.turn['word'] = 'img/words/'+$scope.words[$scope.turn['num']]+'.png';
+        $scope.turnStatus = $scope.turnStatuses['word'];
+        $scope.wordShown = true;
+      }, 100, true)  
+      .then(function(){
+        // play word video
         $timeout(function(){
-          $scope.turn['word'] = 'img/words/'+$scope.words[$scope.turn['num']]+'.png';
-          $scope.turnStatus = $scope.turnStatuses['word'];
-          $scope.wordShown = true;
-        }, 1000, true)  /******************************************/       
-        .then(function(){
-          // play word video
-          $timeout(function(){
-            if ($scope.turn['num'] == 1) {
-              $scope.vidNumber = 1;
-              $scope.videoPlayer1.play();
-            } else {
-              $scope.vidNumber = 3;
-              $scope.videoPlayer3.play();
-            }
-          }, 3000, true)  /******************************************/       
-        });
+          if ($scope.turn['num'] == 1) {
+            $scope.vidNumber = 1;
+            $scope.videoPlayer1.play();
+          } else {
+            $scope.vidNumber = 3;
+            $scope.videoPlayer3.play();
+          }
+        }, 2000, true)       
       });
     };
 
     $scope.playLearnPart2 = function() {
         $timeout(function(){
           $scope.repeatThat = false;
-          //$scope.showMic = false;
         }, 500, true)
         .then(function(){
           // feedback 
           $timeout(function(){
             $scope.pointsImage = 'img/bubble_' + $scope.turn['num']*10 + '.png';
             $scope.learningFeedback = true;
-          }, 3000, true)
+          }, 500, true)
           .then(function(){
             // feedback 
             $timeout(function(){
               $scope.turn['learning'] = false;
               $scope.playTeachPart1();
-            }, 2000, true);
+            }, 1000, true);
           });
         });
     };
@@ -424,21 +485,17 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
       });
     }
 
-    $scope.pluginAlert = function(msg){
-      alert(msg);
-    }
-
     $scope.micTouched = function(){
       if ($scope.micIcon == 'img/mic_touch.gif') {
         $scope.micIcon = 'img/mic_hold.png';
-        $scope.videoRecorder.start('myvideo', 'front', null, null);
+        //$scope.videoRecorder.start('myvideo', 'front', null, null);
       }
     }
 
     $scope.micReleased = function(){
       if ($scope.micIcon == 'img/mic_hold.png') {
         $scope.micIcon = 'img/mic_reg.png';
-        $scope.videoRecorder.stop(null, null);
+        //$scope.videoRecorder.stop(null, null);
         if ($scope.turn['learning']) {      
           $scope.playLearnPart2();
         } else {
@@ -447,25 +504,90 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
       }
     }
 
-    $scope.startPlaying = function(){
+    $scope.startPlaying = function(){  
+      $timeout(function(){
+        $scope.learningFeedback = false;
+        var dotPostion = (-47 * ($scope.turn['num'])).toString() + 'px';
+        $scope.dotsCount = {'background-position': '0px ' + dotPostion};
+        $scope.turnStatus = $scope.turnStatuses['start'];
+        $scope.initCamera();
+        $scope.playLearnPart1();
+      }, 1000)
+    };
+
+    $scope.countdown = function () {
+      if (!$scope.audioPlayer) {
+        $scope.audioPlayer = new Audio('assets/audio/bell.wav')
+        $scope.audioPlayer.load();
+      }
+      var cd = document.getElementById("countdown");
+      cd.style.opacity = 0;
+      $scope.countdownNumber = 3;
+      Velocity(
+        cd, 
+        { opacity: [1,0], 'font-size': ['120px', '0px'] }, 
+        { duration: 1000, 
+          complete: function(){
+            Velocity(
+              cd, 
+              { opacity: [1,0], 'font-size': ['120px', '0px'] }, 
+              { duration: 1000, 
+                begin: function(){cd.style.opacity = 0; $scope.countdownNumber--; $scope.$apply(); },
+                complete: function(){
+                  Velocity(
+                    cd, 
+                    { opacity: [1,0], 'font-size': ['120px', '0px'] }, 
+                    { duration: 800, 
+                      begin: function(){cd.style.opacity = 0; $scope.countdownNumber--; $scope.$apply(); }, 
+                      complete: function(){cd.style.opacity = 0; $scope.audioPlayer.play(); $scope.startPlaying();}
+                    }
+                  )
+                }
+              }
+            )
+          }
+        }
+      )
+    };
+
+
+    $scope.gameSetup = function(){
+      $scope.wordShown = false;
       $timeout.cancel($scope.startTimer);
+      $scope.countdownNumber = '';
       $scope.teachingFeedback = false;
       $scope.turn = { num: 1, learning: true};
       $scope.turn['word'] = 'img/words/'+$scope.words[1]+'.png';
+      $scope.menuIconClass = "white" 
       $scope.status = 'playing';
-      $scope.videoRecorder = window.Plugin.backgroundvideo;
-      $scope.videoRecorder.init('myvideo', 'front', null, null);
-      $scope.playLearnPart1();
+
+      $scope.countdown()
+    }
+
+    $scope.showMatch = function () {
+      $scope.startTimer = $timeout(function(){ 
+        if ($scope.status == 'match'){
+          $scope.gameSetup();
+        }
+      }, 3000, true); 
+    }
+
+    $scope.hideGlobe = function(){
+      $timeout.cancel($scope.globeTimer);
+      $scope.status = 'match';
+      $scope.showMatch();
     }
 
     $scope.gotoGlobe = function() {
-      var wait = $timeout(function(){ 
-        $scope.status = 'match';
+      $scope.menuIconClass = "black";
+      $scope.status = 'loading';
+      $scope.globeTimer = $timeout(function(){
+        if ($scope.status == 'loading') {
+          $scope.hideGlobe();
+        }
       }, 4000, true)
       .then(function(){
-        $scope.startTimer = $timeout(function(){ 
-          $scope.startPlaying();
-        }, 3000, true);
+        $scope.showMatch();
       })
     }
 
@@ -473,7 +595,6 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
       $scope.modal.hide();
       switch (action) {
         case 'globe':
-          $scope.status = 'loading';
           $scope.gotoGlobe();       
           break;
         case 'test':
@@ -481,12 +602,18 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
           break;
         case 'play':
           $scope.status = 'playing';
-          $scope.startPlaying();
+          $scope.gameSetup();
           break; 
       }
     };
 
-    $scope.status = 'loading';
+    $scope.repeatVideo = function(){
+      if ($scope.vidNumber >=1 && $scope.vidNumber <=4) {
+        $scope.videoPlayer = document.getElementById("video_" + $scope.vidNumber);
+        $scope.videoPlayer.play();
+      }
+    }
+
     $scope.gotoGlobe();
 
   });
@@ -537,7 +664,7 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
       var current_connection = connections[i].sections;
       for(var j=0;j<current_connection.length;j++){
         ctx.beginPath();
-        ctx.strokeStyle = "Green";
+        ctx.strokeStyle = "#75E2C4";
         ctx.moveTo(current_connection[j].x1, current_connection[j].y1);
         ctx.lineTo(current_connection[j].x2, current_connection[j].y2);
         ctx.stroke();
@@ -595,23 +722,23 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
             var endElem = $scope.onElement({x: lastPosX, y: lastPosY});
             if (endElem === null) {
               // show message - start and end on words/videos
-              //redrawStoredLines(ctx)
-
             } else {
               if (current_connection.startType !== endElem.type) {
                 if (current_connection.startWord === endElem.word) {
                   connections.push(current_connection);
                 } else {
                   // show message - no match
-                  //redrawStoredLines(ctx);
                 }
 
               } else { 
                 // show message - connect video to word or vice-versa.
-                //redrawStoredLines(ctx);
               } 
             }
             redrawStoredLines(ctx);
+            if (connections.length == 2) {
+              console.log("2")
+              $scope.giveFeedback();
+            }
             current_connection = {startType:"", sections:[]};
             drawing = false;   
             break;
@@ -643,8 +770,15 @@ angular.module('ananas.controllers', ['ionic', 'ananas.services', 'firebase', 'a
     return array;
   }
 
-  $scope.words = [{word: 'sun', icon: 'img/words/sun.png', bg: 'img/word_card_pink.png'}, {word: 'heart', icon: 'img/words/heart.png', bg: 'img/word_card_green.png'}];
-  $scope.videos = [{id:"0", word: 'sun', src: 'vid/alma/alma_shemesh_ipod.m4v'}, {id: "1", word: 'heart', src:'vid/alma/alma_lev_ipod.m4v'}]
+  $scope.giveFeedback = function(){
+    $scope.state = "feedback";
+    $scope.$apply();
+  }
+
+  $scope.words = [{word: 'sun', icon: 'img/words/sun.png', bg: 'img/word_card_pink.png'}, 
+                  {word: 'heart', icon: 'img/words/heart.png', bg: 'img/word_card_green.png'}];
+  $scope.videos = [{id:"0", word: 'sun', src: 'assets/videos/alma/alma_shemesh_ipod.m4v'}, 
+                  {id: "1", word: 'heart', src:'assets/videos/alma/alma_lev_ipod.m4v'}]
   $scope.videos = $scope.shuffleArray ($scope.videos);
   $scope.connectableElements = [];
  

@@ -1,6 +1,7 @@
 <ion-view>
   <ion-content scroll="false">
   	<div class="app-root game">
+      <div class="menu-icon" menu-toggle="left"></div>
       <canvas id="canvas" width="1024px" height="768px" ananas-draw-and-play></canvas>
   		<div class="words">
   			<div id="word-card-{{$index}}" data-type="word" data-word="{{word.word}}" class="word-card" ng-repeat="word in words" connectable-element>
@@ -15,9 +16,12 @@
 					<video id="video-{{video.id}}" height="200" width="200" ng-src="{{video.src}}" type="video/mp3" preload="auto">
 						Your browser does not support the video tag.
 					</video>
-          <img class="mask" src="img/video_mask.png"/>
+          <img class="mask" src="img/video_mask.gif"/>
 				</div>
       </div>
+      <div class="teaching ng-hide" ng-show="state === 'feedback'">
+        <img class="stars" src="img/stars_fullscreen.png"/>
+      </div>    
   	</div>
   </ion-content>
 </ion-view>

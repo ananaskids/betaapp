@@ -215,6 +215,14 @@ module.exports = [
         "clobbers": [
             "window.open"
         ]
+    },
+    {
+        "file": "plugins/com.keith.cordova.plugin.canvascamera/www/CanvasCamera.js",
+        "id": "com.keith.cordova.plugin.canvascamera.CanvasCamera",
+        "clobbers": [
+            "plugin.CanvasCamera",
+            "CanvasCamera"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -226,7 +234,8 @@ module.exports.metadata =
     "org.apache.cordova.console": "0.2.12",
     "org.apache.cordova.device": "0.2.13",
     "org.apache.cordova.file": "1.3.2",
-    "org.apache.cordova.inappbrowser": "0.5.4"
+    "org.apache.cordova.inappbrowser": "0.5.4",
+    "com.keith.cordova.plugin.canvascamera": "1.0.0dev"
 }
 // BOTTOM OF METADATA
 });

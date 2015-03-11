@@ -1,8 +1,10 @@
 <ion-view>
   <ion-content scroll="false">
 		<div class="app-root learning">
-			<div class="menu-icon" ng-click="alert('what should I do?');"></div>
-			<div ng-show="status === 'loading'" class="globe"></div>
+			<div class="menu-icon" ng-class="menuIconClass" menu-toggle="left" ></div>
+			<div ng-show="status === 'loading'" class="globe" ng-click="hideGlobe()">
+				<img src="img/globe.gif"/>
+			</div>
 			<div ng-show="status === 'match'" class="match ng-hide">
 				<div class="col-left me">
 					<img class="pic circle" ng-src="{{me.pic}}"/>
@@ -20,7 +22,7 @@
 						<span>She is from {{friend.country}},<br>she speaks {{friend.language}}</span>
 					</div>
 				</div>
-				<img class="circle ananas_a" src="img/a_20.png"/ ng-click="startPlaying()">
+				<img class="circle ananas_a" src="img/a_20.png"/ ng-click="gameSetup()">
 			</div>
 			<div ng-show="status === 'playing'" class="playing ng-hide">
 				<div class="counter">
@@ -42,30 +44,35 @@
 				</div>
 				<div class="turn ng-hide" ng-show="turnStatus >= turnStatuses['start']">
 					<img class="word-bg" src="img/word_card_yellow.png"/><br>
+					<div id="countdown" class="countdown" ng-hide="hideCountDown" ng-style="countdownStyle">{{countdownNumber}}</div>
 					<img class="word" ng-show="wordShown" ng-src="{{turn['word']}}"/>
 					<div class="col-left me">
+						<div id="my-screen" class="screen"></div> 
 						<div class="vid-container"></div>
 						<img class="repeat-that" ng-show="repeatThat" src="img/bubble_repeat_that.png"/>
 						<img class="your-turn" ng-show="yourTurn" src="img/bubble_your_turn.png"/>
+						<img class="mic" ng-show="showMic" ng-src="{{micIcon}}" on-touch="micTouched()" on-release="micReleased()"/>
+						<canvas id="camera"></canvas>
 					</div>
 					<div class="col-right friend">
+						<div id="friends-screen" class="screen"></div> 
 						<div class="vid-container">
-							<video videoLoader id="video_1" ng-show="vidNumber === 1" height="300" width="532" src="vid/alma/alma_shemesh_ipod.m4v" type="video/mp3" preload="auto" muted>
+							<video videoLoader id="video_1" ng-show="vidNumber === 1" height="400" width="709" src="assets/videos/alma/alma_shemesh_ipod.m4v" type="video/mp3" preload="auto" muted>
 								Your browser does not support the video tag.
 							</video>							
-							<video id="video_2" ng-show="vidNumber === 2" height="300" width="532" src="vid/alma/alma_sun_ipod.m4v" type="video/mp3" preload="auto" muted>
+							<video id="video_2" ng-show="vidNumber === 2" height="400" width="709" src="assets/videos/alma/alma_sun_ipod.m4v" type="video/mp3" preload="auto" muted>
 								Your browser does not support the video tag.
 							</video>							
-							<video id="video_3" ng-show="vidNumber === 3" height="300" width="532" src="vid/alma/alma_lev_ipod.m4v" type="video/mp3" preload="auto" muted>
+							<video id="video_3" ng-show="vidNumber === 3" height="400" width="709" src="assets/videos/alma/alma_lev_ipod.m4v" type="video/mp3" preload="auto" muted>
 								Your browser does not support the video tag.
 							</video>							
-							<video id="video_4" ng-show="vidNumber === 4" height="300" width="532" src="vid/alma/alma_heart_ipod.m4v" type="video/mp3" preload="auto" muted>
+							<video id="video_4" ng-show="vidNumber === 4" height="400" width="709" src="assets/videos/alma/alma_heart_ipod.m4v" type="video/mp3" preload="auto" muted>
 								Your browser does not support the video tag.
 							</video>
 							<img class="video-mask"src="img/hole_small_red.png" />						  			
 						</div>
+						<div class="play-again" ng-click="repeatVideo()" ng-show="showRepeatVideo"></div>
 					</div>
-					<img class="mic" ng-show="showMic" ng-src="{{micIcon}}" on-touch="micTouched()" on-release="micReleased()">
 					<div class="feedback">
 						<div class="learning" ng-show="learningFeedback">
 							<img class="message" src="img/bubble_great.png"/>

@@ -1,29 +1,54 @@
 <ion-view>
   <ion-content scroll="false">
     <div class="app-root login">
+      <div class="menu-icon black" menu-toggle="left"></div>
       <div class="needs-signin" ng-show="userStatus === 'no user'">
+        <div class="login-bg"></div>
         <div class="page-title">Hi! Welcome to ananas!</div>
         <div class="page-bold">
-          Mom or dad, please sign up through Facebook, <br>and your child will be exploring the world momentarily!
+          Mom or dad, please sign up here, <br>and your child will be exploring the world momentarily!
         </div>
-        <div class="button fb-button" ></div>
-        <div class="page-msg">
-          <!--This is a security measure...<br>
-          Don't worry, ananas won't post anything on your behalf! -->
-        </div>
+        <form class="parent-form" name="parentForm" novalidate ng-submit="parentForm.$valid && signIn()">
+          <span class="form-field">
+            <input type="email" id="email" class="email" name="pEmail" ng-model="parent.email" ng-keypress="catchGo($event,'year');" required="" placeholder="Parent Email"/>
+          </span>
+          <span class="form-field">
+            <input type="tel" id="year" class="year" name="pYear" ng-model="parent.year" ng-keypress="catchGo($event,'pwd');" required="" numeric year placeholder="Parent Year of Birth"/>
+          </span>
+          <span class="form-field">
+            <input type="password" id="pwd" class="pwd" name="pPwd" ng-model="parent.password" ng-keypress="catchGo($event,'');" required="" ng-minlength="6" placeholder="Parent Password"/>
+          </span>
+          <div class="form-errors">
+            <div ng-show="parentForm.$submitted || parentForm.pEmail.$touched" class="ng-hide">
+              <span ng-show="parentForm.pEmail.$error.required">Email is required</span>
+              <span ng-show="parentForm.pEmail.$error.email">Not a valid email</span>
+            </div>
+            <div ng-show="parentForm.$submitted || parentForm.pYear.$touched" class="ng-hide">
+              <span ng-show="parentForm.pYear.$error.required">Year is required</span>
+              <span ng-show="parentForm.pYear.$error.numeric">Only digits please</span> 
+              <span ng-show="parentForm.pYear.$error.year">Year must be between 1950 and 2000</span>
+            </div>
+            <div ng-show="parentForm.$submitted || parentForm.pPwd.$touched" class="ng-hide">
+              <span ng-show="parentForm.pPwd.$error.required">Password is required</span>
+              <span ng-show="parentForm.pPwd.$error.minlength">Password needs at least 6 characters</span>
+            </div>
+          </div>
+          <div class="sub-text">We use your email to connect you to your child's learning progress, and to keep Ananas safe and fun!</div>
+          <input type="submit" class="continue" value=""/>
+        </form>
       </div>
       <div class="signed-in-new" ng-show="userStatus === 'user - no children'">
+        <div class="login-bg"></div>
         <div class="page-bold low">
           Nice to meet you! Almost ready!<br>Now all we need to do is help your child sign up.<br><br>Thanks!
         </div>
-        <div class="continue" ng-click="addChild()"></div>
+        <div class="gotit" ng-click="childSelected({ name: 'Me Too!'});"></div>
       </div>
       <div class="signed-in-existing" ng-show="userStatus === 'user with children'">
-        <div class="page-bold">
-          Welcome Back!<br>Who's playing?
-        </div>
+        <div class="page-bold">Welcome Back!</div>
+        <div class="page-bold">Who's playing?</div>
         <ul class="children" rn-carousel>
-          <li ng-repeat="child in children" class="child" ng-click="childSelected(child)">
+          <li ng-repeat="child in myChildren" class="child" ng-click="childSelected(child)">
             <img class="pic circle" ng-src="{{child['photo']}}"/>
             <img class="score" ng-src="img/bubble_{{child['score']}}.png"/>
             <div class="name">{{child['name']}}</div>

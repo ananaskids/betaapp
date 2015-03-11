@@ -1,6 +1,7 @@
 <ion-view>
   <ion-content scroll="false">
     <div class="app-root add-child">
+      <div class="menu-icon black" menu-toggle="left"></div>
       <form class="child-form" name="childForm" novalidate ng-submit="childForm.$valid && startLearning()">
         <span class="form-field">
           <span>Hi! My name is</span><input type="text" id="name" class="name" name="cName" ng-model="child.name" ng-keypress="catchGo($event,'age');" required="" alpha/>
@@ -47,6 +48,7 @@
           </div>
         </div>
       </form>
+       <canvas id="camera"></canvas>
     </div>
   </ion-content>
 </ion-view>

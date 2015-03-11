@@ -1,25 +1,28 @@
 <ion-side-menus enable-menu-with-back-views="false">
   <ion-side-menu-content>
-    <!--<ion-nav-bar>
-      <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-        </button>
-      </ion-nav-buttons>
-    </ion-nav-bar>-->
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
   <ion-side-menu side="left">
-    <ion-header-bar class="bar-stable">
-      <h1 class="title">what would you like to do?</h1>
-    </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item nav-clear menu-close ng-click="goToLogin()">
-          {{menuData.loginLabel}}
+        <ion-item nav-clear menu-close ng-click="menuAction('about')">
+          About Ananas
         </ion-item>
-        <ion-item nav-clear menu-close ng-click="">
-          Who's Playing?
+        <ion-item nav-clear class="menu-line"></ion-item>
+        <ion-item nav-clear menu-close ng-click="menuAction('privacy')">
+          Privacy
+        </ion-item>
+        <ion-item nav-clear class="menu-line"></ion-item>
+        <ion-item nav-clear menu-close ng-click="$state.go('app.learning')">
+          Back to globe
+        </ion-item>
+        <ion-item nav-clear class="menu-line"></ion-item>
+        <ion-item nav-clear menu-close ng-click="goToLogin()">
+          Back to login
+        </ion-item>
+        <ion-item nav-clear menu-close ng-click="menuAction('logout')">
+          logout
         </ion-item>
       </ion-list>
     </ion-content>

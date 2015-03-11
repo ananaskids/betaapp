@@ -37,9 +37,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .form-field input.ng-invalid { color: #F9525C;}
-
 .form-field select { moz-appearance: none; -webkit-appearance: none; appearance: none; background: transparent url(../img/select_arrow.png) no-repeat scroll 100% -2px; background-color: #fff; border-radius: 0px; -webkit-border-radius: 0px; border:none; height: 45px; line-height: 45px; font-family: 'avenirregular'; font-size: 30px; font-weight: 200; padding-left: 15px; color: #000; }
-
 .form-field select option { moz-appearance: none; -webkit-appearance: none; appearance: none; background-color: #000; color:#fff; border-radius: 0px; -webkit-border-radius: 0px; border-bottom: 3px ; height: 45px; line-height: 50px; font-family: 'avenirregular'; font-size: 25px; font-weight: 200; padding-left: 15px; color: #000; }
 
 
@@ -51,28 +49,60 @@ input[type=number]::-webkit-outer-spin-button {
 .col-left       { display: inline-block; width:50%; height:100%; float:left; text-align:center;position:relative; margin:0;z-index:0;}
 .col-right      { display: inline-block; width:50%; height:100%; float:right; text-align:center;position:relative;}
 
+::-webkit-input-placeholder { color: #9B9B9B; }
+:-moz-placeholder { color: #9B9B9B; opacity: 1 ;}
+::-moz-placeholder { color: #9B9B9B; opacity: 1;}
+:-ms-input-placeholder { color: #9B9B9B;}
+
+/* menu */
+.menu.menu-left               { display:inline-block; background: url(../img/menu_bg.png) repeat-y; position:relative;}
+.menu.menu-left .list         { }
+.menu.menu-left .list .item   { display:inline-block; background: url(../img/menu_bg.png) repeat-y; width:275px; margin:0; border:0; font-family: Avenir-Black; font-size: 25px; color: #000; line-height: 30px;text-align: center;}
+.menu.menu-left .list .item.menu-line    { width:175px; height: 2px; margin: 0px 50px 5px 50px; padding:0; border-bottom: 2px solid; }
+.menu.menu-left .list .item:first-of-type   { margin-top:30px; }
+.menu.menu-left .list .item:last-of-type   { position:fixed; top:650px; left:0;}
+
+/* buttons */
+.btn_continue 								{ background: url(../img/button_continue.png) no-repeat; background-size: 232px 71px;}
+
+
 /* app start */
 
-.app-root							    { display:inline-block; width: 1024px;  height:768px; min-height:724px; text-align: center; }
-
+.app-root							    		{ display:inline-block; width: 1024px;  height:768px; min-height:724px; text-align: center; }
+.app-root .menu-icon          { display:inline-block; position:absolute; top: 18px; left:18px; width:26px; height: 24px; } 
+.app-root .menu-icon.white 		{ background: url(../img/menu_white.png) no-repeat; background-size: 26px 24px;}
+.app-root .menu-icon.black 		{ background: url(../img/menu_black.png) no-repeat; background-size: 26px 24px;}
 /* welcome screen */
 
 .app-root.welcome						{ background: url($splash-bg) no-repeat; background-size: cover; }
 
 /* login screen */
 
-.app-root.login							{ background-color: $light-blue;}
-.app-root.login	.page-title	            { font-family: 'kulturistalight'; font-size: 60px; width:100%; margin-top:150px;}
-.app-root.login	.page-bold	            { font-family: 'avenirregular'; font-size: 30px; width:100%; margin-top:70px; line-height: 1.4}
+.app-root.login							{ background-color: $light-blue; width:1024px; height:768px;}
+.app-root.login .login-bg   { display:inline-block; width:1024px; height:768px; background: url(../img/parent_signup_bg.png) no-repeat; background-size: 1024px 768px; position:fixed; top:0; left:0;z-index:0;}
+
+.app-root.login .parent-form { display:inline-block; width:524px; position:fixed; top:345px;left:262px;} 
+
+.app-root.login .parent-form .continue     { width:232px; height:71px;}
+.app-root.login .parent-form .form-field { display:inline-block; width:524px; height:54; margin-bottom: 10px;} 
+.app-root.login .parent-form .form-field input { font-family: 'avenirlight'; font-size: 20px; color: #000; line-height: 28px; padding: 20px;}
+.app-root.login .parent-form .form-errors  { display: inline-block; width:250px; position:absolute; top:0px; left:512px; background-color: #F9525C; }
+.app-root.login .parent-form .form-errors span { display: inline-block; width:250px; height:auto; min-height:40px; background-color: #F9525C; font-family: 'avenirregular'; font-size: 20px; color: #fff; padding:10px 0 0 10px;}
+
+.app-root.login .parent-form .sub-text 	{ font-family: Avenir-Light; font-size: 20px; color: #000; line-height: 28px; margin-top:50px;}
+.app-root.login	.page-title	            { position:relative; font-family: 'kulturistalight'; font-size: 60px; width:100%; margin-top:120px;z-index:1;}
+.app-root.login	.page-bold	            { position:relative; font-family: 'avenirregular'; font-size: 30px; width:100%; margin-top:70px; line-height: 1.4}
 .app-root.login .page-bold.low          { margin-top:288px; line-height: 1.4}
 .app-root.login	.fb-button              { background: url(../img/fb_sign_up.png) no-repeat; background-size: cover; display:block; width:472px; height:71px; margin: 60px auto 0 auto;}
-.app-root.login .continue               { background: url(../img/button_continue.png) no-repeat; background-size: cover; display:block; width:232px; height:71px; margin: 40px auto 0 auto;}
+.app-root.login .continue               { background: url(../img/button_continue.png) no-repeat; background-size: cover; display:block; width:232px; height:71px; margin: 40px auto 0 auto;z-index:1;position:relative;}
+.app-root.login .gotit 	 	              { background: url(../img/button_gotit.png) no-repeat; background-size: cover; display:block; width:232px; height:71px; margin: 180px auto 0 auto;z-index:1;position:relative;}
 .app-root.login .page-msg               { margin:60px auto 0 auto; background: url(../img/security_message.png) no-repeat; background-size: cover; display:block; width:490px; height:48px;}
 .app-root.login .signed-in-existing .page-bold        { display:inline-block; width:100%; text-align: center; margin-top:100px; font-family:'kulturistalight'; font-size:60px; line-height: 60px;}
+.app-root.login .signed-in-existing .page-bold:last-of-type { margin-top: 15px;}
 .app-root.login .signed-in-existing .children         { display: inline-block; width:2000px; height:550px; margin: 100px 0 0 120px; }
 .app-root.login .signed-in-existing .children .child         { width:250px;float:left;}
 .app-root.login .signed-in-existing .children .child:hover   { cursor: pointer;}
-.app-root.login .signed-in-existing .children .child .pic    { width:200px; z-index: 5;}
+.app-root.login .signed-in-existing .children .child .pic    { width:200px; z-index: 5;} 
 .app-root.login .signed-in-existing .children .child .score  { position:relative; top:-50px; left:50px; z-index: 10; width:100px;}
 .app-root.login .signed-in-existing .children .child .name   { font-family:'avenirregular'; font-size:28px; position:relative; top:-40px;}
 
@@ -105,60 +135,68 @@ input[type=number]::-webkit-outer-spin-button {
 .app-root.add-child .child-form .form-field #country                { width:523px;}
 .app-root.add-child .child-form .form-field #language               { width:430px;}
 .app-root.add-child .child-form .form-field#actions                 { margin: 50px 0 0 100px;}
-.app-root.add-child .child-form .form-field .take-picture           { display:block; width:162px; height:162px; float:left; background: url(../img/camera_icon.png) no-repeat; background-size: cover; border:0px;}
+.app-root.add-child .child-form .form-field .take-picture           { display:block; width:162px; height:162px; float:left; background: url(../img/camera_icon.png) no-repeat; background-size: cover; border:0px; position:relative; z-index:5;}
 .app-root.add-child .child-form .form-field .lets-go                { display:block; width:237px; height:156px; margin:-20px 0 0 80px; float:left; background: url(../img/button_letsgo.png) no-repeat; background-size: cover; border:0px;}
 .app-root.add-child .child-form .form-field .continue               { width: 100%;}
-
+.app-root.add-child #camera 																				{ position:absolute; top:234px; left:362px; width:400px; height:400px;-webkit-border-radius: 200px; -moz-border-radius: 200px; border-radius: 200px;}
 /* learning screen */
 
 .app-root.learning                      { }
-.app-root.learning .menu-icon           { display:inline-block; position:absolute; top: 18px; left:18px; width:26px; height: 24px; background: url(../img/menu_white.png) no-repeat; background-size: 26px 24px;}
-.app-root.learning .globe               { width:100%; height:100%; background: url($learning-bg) no-repeat; background-size: cover; position:relative; z-index:100;}
+.app-root .menu-icon          					{ display:inline-block; position:absolute; top: 17px; left:17px; width:26px; height: 24px; background: url(../img/menu_white.png) no-repeat; background-size: 26px 24px;z-index:500;}
+.app-root.learning .globe               { width:100%; height:100%; background-color: #a5f2fa; }
+.app-root.learning .globe img           { width:100%; height:100%; position:relative; z-index:100;}
 .app-root.learning .match               { display:inline-block; width:100%; height:100%; }
 .app-root.learning .match .me           { background-color: #A5F2FA;}
 .app-root.learning .match .friend       { background-color: #FC6B6F;}
-.app-root.learning .match .pic          { display:inline-block; width:300px; margin: 110px auto 0 auto; border:0px; -webkit-border-radius: 150px; -moz-border-radius: 150px; border-radius: 150px;}
-.app-root.learning .match .flag         { position:absolute; display:inline-block; top:50%;left:37%;}
+.app-root.learning .match .pic          { display:inline-block; width:320px; margin: 110px auto 0 auto; border:0px; -webkit-border-radius: 160px; -moz-border-radius: 160px; border-radius: 160px;}
+.app-root.learning .match .flag         { position:absolute; display:inline-block; top:400px;left:37%;}
 .app-root.learning .match .ananas_a     { width:141px; position:absolute; top:400px; margin:-70px;}
 .app-root.learning .match .text         { display:inline-block; font-family: Avenir-Black; font-size: 25px; color: #000000; line-height: 30px;margin-top: 50px;}
 .app-root.learning .match .text .label  { font-family: KulturistaLight; font-size: 50px; color: #000000; line-height: 98px; width:100%; }
 
 .app-root.learning .playing               { display:inline-block; width:100%; height:708px; }
-.app-root.learning .playing .counter      { display:inline-block; width:100%; height:60px; background-color: #0F244D;}
-.app-root.learning .playing .counter .dots{ display:inline-block; width:173px; height:35px; background: url(../img/5_row.png) no-repeat; background-size: 173px 279px; margin-top: 5px; z-index:25;position:relative;}
+.app-root.learning .playing .counter      { display:inline-block; width:100%; height:60px; background-color: #0F244D; position:relative;z-index:80}
+.app-root.learning .playing .counter .dots{ display:inline-block; width:173px; height:35px; background: url(../img/5_row.png) no-repeat; background-size: 173px 279px; margin-top: 5px; z-index:45;position:relative;}
 .app-root.learning .playing .me           { background-color: #A5F2FA;}
 .app-root.learning .playing .friend       { background-color: #FC6B6F;}
-.app-root.learning .playing .pic          { display:inline-block; width:300px; height:300px; margin: 242px auto 0 auto; border:0px; -webkit-border-radius: 150px; -moz-border-radius: 150px; border-radius: 150px;}
-.app-root.learning .playing .info         { position:absolute; display:inline-block; width: 270px; top:4%;left:7%;font-family: Avenir-Black; font-size: 25px; color: #000; text-align: left; line-height: 33px;}
-.app-root.learning .playing .info.right   { left:40%; text-align: right}
+.app-root.learning .playing .pic          { display:inline-block; width:400px; height:400px; margin: 200px 56px 0 56px; border:0px; -webkit-border-radius: 200px; -moz-border-radius: 200px; border-radius: 200px;}
+.app-root.learning .playing .info         { position:absolute; display:inline-block; width: 270px; top:34px;left:40px;font-family: Avenir-Black; font-size: 25px; color: #000; text-align: left; line-height: 33px;}
+.app-root.learning .playing .info.right   { left:472px; text-align: right}
 .app-root.learning .playing .info .flag   { width:103px; height:72px; }
 .app-root.learning .playing .info .label  { font-family: KulturistaLight; font-size: 50px; color: #000000; line-height: 50px; width:100%; }
 
 .app-root.learning .playing .turn                       { position:absolute; top:55px; text-align: center; width: 100%;}
-.app-root.learning .playing .turn .word-bg              { display:inline-block; width:335px; height:314px; position:absolute; left:345px; z-index:20; top:6px;}
-.app-root.learning .playing .turn .word                 { display:inline-block; width:195px; height:196px; position:absolute; left:413px; top:40px; z-index:20;}    
-.app-root.learning .playing .turn .mic                  { display:inline-block; width:164px; height:164px; position:absolute; left:310px; top:512px;z-index:30;}
+.app-root.learning .playing .turn .countdown						{ display:inline-block; width:335px; height:314px; position:absolute; left:345px; top: 120px; z-index:50; text-align: center; font-family: 'kulturistalight'; font-size: 0px; }
+
+.app-root.learning .playing .turn .word-bg              { display:inline-block; width:335px; height:314px; position:absolute; left:345px; z-index:40; top:5px;}
+.app-root.learning .playing .turn .word                 { display:inline-block; width:318px; height:329px; position:absolute; left:354px; top:-25px; z-index:50;}    
+.app-root.learning .playing .turn .mic                  { display:inline-block; width:164px; height:164px; position:absolute; left:310px; top:512px;z-index:20;}
 
 .app-root.learning .playing .turn .me                   { position:relative; z-index: 0}
-.app-root.learning .playing .turn .me .vid-container    { position:absolute; left:0px; top:200px;display:inline-block; width:512px; height:300px; z-index:0;}
-.app-root.learning .playing .turn .me .repeat-that      { position:absolute; left:30px; top:552px;display:inline-block; width:206px; height:142px; z-index:10;} 
-.app-root.learning .playing .turn .me .your-turn        { position:absolute; left:0px; top:200px;display:inline-block; width:135px; height:162px; z-index:10;} 
+.app-root.learning .playing .turn .me .vid-container    { position:absolute; left:0px; top:200px;display:inline-block; width:683px; height:400px; z-index:10;}
+.app-root.learning .playing .turn .me #camera 					{ position:absolute; top:186px; left:56px; width:400px; height:400px;-webkit-border-radius: 200px; -moz-border-radius: 200px; border-radius: 200px;z-index:10;}
 
-.app-root.learning .playing .turn .feedback .message{ position:absolute; left:0px; top:202px;display:inline-block; width:135px; height:162px; z-index:10;} 
-.app-root.learning .playing .turn .feedback .points { position:absolute; left:50px; top:502px;display:inline-block; width:120px; height:120px; z-index:10;}
-.app-root.learning .playing .turn .feedback .stars  { position:absolute; left:0px; top:0px; width:1024px; height:670px; z-index:500;}
+.app-root.learning .playing .turn .me .repeat-that      { position:absolute; left:10px; top:504px;display:inline-block; width:275px; height:190px; z-index:20;} 
+.app-root.learning .playing .turn .me .your-turn        { position:absolute; left:0px; top:200px;display:inline-block; width:182px; height:219px; z-index:20;} 
+.app-root.learning .playing .turn .me .screen       		{ position:absolute; left:0; top:-15px; display:block; width:512px; height:768px; opacity:0.8; background-color: #A5F2FA; z-index:30;}
+     
+.app-root.learning .playing .turn .feedback .message		{ position:absolute; left:0px; top:200px;display:inline-block; width:182px; height:219px; z-index:30;} 
+.app-root.learning .playing .turn .feedback .points 		{ position:absolute; left:40px; top:462px;display:inline-block; width:162px; height:162px; z-index:20;}
+.app-root.learning .playing .turn .feedback .stars  		{ position:absolute; left:0px; top:0px; width:1024px; height:674px; z-index:50;}
 
 .app-root.learning .playing .turn .friend                   { } 
-.app-root.learning .playing .turn .friend .vid-container    { position:absolute; left:50px; top:228px;display:inline-block; width:512px; height:300px; background: url(../img/hole_small_red.png) no-repeat cover; z-index:10;}
-.app-root.learning .playing .turn .friend video             { position:absolute; left:-62px; z-index:-5;}
-.app-root.learning .playing .turn .friend .video-mask       { position:absolute; left:10px; height:300px; z-index:30;}
+.app-root.learning .playing .turn .friend .vid-container    { position:absolute; left:0px; top:186px;display:inline-block; width:683px; height:400px; background: url(../img/hole_small_red.png) no-repeat cover; z-index:10;}
+.app-root.learning .playing .turn .friend video             { position:absolute; left:-100px; z-index:10;}
+.app-root.learning .playing .turn .friend .video-mask       { position:absolute; left:0px; height:400px; z-index:20;}
+.app-root.learning .playing .turn .friend .play-again 			{ display:inline-block; width:338px; height:164px; position:absolute; left:310px; top:500px; background: url(../img/bubble_repeat.png) no-repeat; background-size: 169px 162px;z-index:20;}
+.app-root.learning .playing .turn .friend .screen           { position:absolute; left:0; top:-15px; display:block; width:512px; height:718px; opacity:0.8; background-color: #A5F2FA; z-index:30; }
 
-.play-again 															{ display:inline-block;width: 1024px;  height:768px; background-color: #a5f2fa;}
-.play-again .text 												{ font-family: 'kulturistalight'; font-size: 60px; width:100%; text-align: center;margin: 100px auto 50px auto; line-height: 70px;}
-.play-again .actions 											{ width:100%; text-align: center;}
-.play-again .actions .globe 							{ display:inline-block; width:203px; height:279px; background: url(../img/bubble_back_to_globe.png) no-repeat;background-size: 203px 203px; z-index:5;position:relative; top:0px;left:70px;padding-top: 203px;}
-.play-again .actions .play-again 					{ display:inline-block; width:330px; height:330px; background: url(../img/bubble_play_again.png) no-repeat; background-size: 330px 330px;position:relative; z-index:10;}
-.play-again .actions .test 								{ display:inline-block; width:203px; height:279px; background: url(../img/bubble_test.png) no-repeat; background-size: 203px 203px;z-index:5;position:relative; top:0px;left:-70px;padding-top: 203px;}
+.play-again																{ display:block; width: 1024px;  height:768px; position: absolute; top:0; left:0; z-index:0;}
+.play-again .text 												{ font-family: 'kulturistalight'; font-size: 60px; width:100%; text-align: center;margin-bottom: 50px; line-height: 70px;position:relative; top:100px;}
+.play-again .actions 											{ width:100%; text-align: center; position:relative; top:100px;}
+.play-again .actions .globe 							{ display:inline-block; width:203px; height:279px; opacity:1; background: url(../img/bubble_back_to_globe.png) no-repeat;background-size: 203px 203px; z-index:5;position:relative; top:0px;left:70px;padding-top: 203px;}
+.play-again .actions .play-again 					{ display:inline-block; width:330px; height:330px; opacity:1; background: url(../img/bubble_play_again.png) no-repeat; background-size: 330px 330px;position:relative; z-index:10;}
+.play-again .actions .test 								{ display:inline-block; width:203px; height:279px; opacity:1; background: url(../img/bubble_test.png) no-repeat; background-size: 203px 203px;z-index:5;position:relative; top:0px;left:-70px;padding-top: 203px;}
 .play-again .actions span 								{font-family: 'avenirregular'; font-size: 26px; line-height: 38px; }
 
 .app-root.game                              { background-color: #11325F; color:#fff; position:relative;height:768px;}
@@ -173,7 +211,7 @@ input[type=number]::-webkit-outer-spin-button {
 .app-root.game .videos .video-card          { position:relative; float:left; width:223px; height:209px; margin-left: 30px;z-index:0;}
 .app-root.game .videos .video-card video    { display:inline-block; width:209px; height:209px; position:absolute; top:0px; left: 0px;z-index:15;}
 .app-root.game .videos .video-card .mask    { display:inline-block; width:209px; height:209px; position:absolute; top:0px; left: 0px;z-index:25;}
-  
+.app-root.game .teaching 										{ position:absolute; left:0px; top:0px;display:inline-block; width:1024px; height:768px; z-index:100;}  
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
@@ -187,5 +225,26 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
   left: 0;
   right: 0;
   width: 100%;
-  opacity: 0.9;
+  background: rgba(165,242,250,0.88);
 }
+
+.animate-show {
+  line-height: 60px;
+  opacity: 1;
+  padding: 10px;
+}
+
+.animate-show.ng-hide-add.ng-hide-add-active,
+.animate-show.ng-hide-remove.ng-hide-remove-active {
+  transition-property: top, font-size;
+  transition-duration: 0.8s, 1s, 0.5s, 0.5s;
+  transition-delay: 0.2s, 0.5s, 1s, 1.5s;
+}
+
+.animate-show.ng-hide {
+  line-height: 0;
+  opacity: 0;
+  padding: 0 10px;
+}
+
+

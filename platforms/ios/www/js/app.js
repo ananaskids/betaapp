@@ -65,7 +65,6 @@ angular.module('ananas', ['ionic', 'ananas.controllers','ngCordova','ngCordovaOa
     }
   })
 
-
   .state('app.test', {
     url: '/test',
     views: {
@@ -75,17 +74,7 @@ angular.module('ananas', ['ionic', 'ananas.controllers','ngCordova','ngCordovaOa
       }
     }
   })
-/*
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
-*/
+
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/test');
+  $urlRouterProvider.otherwise('/app/welcome');
 });

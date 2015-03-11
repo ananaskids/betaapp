@@ -10,6 +10,20 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'avenirlight';
+    src: url('fonts/Avenir-Light-webfont.eot');
+    src: url('fonts/Avenir-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Avenir-Light-webfont.woff2') format('woff2'),
+         url('fonts/Avenir-Light-webfont.woff') format('woff'),
+         url('fonts/Avenir-Light-webfont.ttf') format('truetype'),
+         url('fonts/Avenir-Light-webfont.svg#avenir_35_lightregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 @font-face {
     font-family: 'kulturistalight';
     src: url('fonts/kulturista_light-webfont.eot');

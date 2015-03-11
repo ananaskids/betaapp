@@ -1,6 +1,7 @@
 #import "backgroundvideo.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVFoundation.h>
+#import <QuartzCore/QuartzCore.h>
 
 @implementation backgroundvideo
 
@@ -13,6 +14,7 @@
 -(CDVPlugin*) initWithWebView:(UIWebView*)theWebView
 {
     self = (backgroundvideo*)[super initWithWebView:theWebView];
+
     return self;
 }
 
@@ -86,13 +88,14 @@
     self.previewLayer.transform = CATransform3DMakeRotation(angle, 0, 0.0, 1.0);
     self.previewLayer.cornerRadius = 150;
     self.previewLayer.masksToBounds = YES;
-    
-    CALayer *rootLayer = [[self view] layer];
+    NSLog(@"%@",self.webView.superview.subviews);
+    CALayer *rootLayer = [self.webView.superview layer];
     [rootLayer setMasksToBounds:YES];
 
     [self.previewLayer setFrame:CGRectMake(0, 0, 300, 300)];
-    [rootLayer insertSublayer:self.previewLayer atIndex:0];  
-    
+    NSLog(@"%@",self.webView.superview.subviews);
+    [rootLayer insertSublayer:self.previewLayer atIndex:2];
+
     [session startRunning];
 
 }
